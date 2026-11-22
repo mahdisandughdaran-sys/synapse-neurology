@@ -24,6 +24,11 @@
   --color-amber-ink: #2a1c08;
   --color-rose: #e07a72;
   --color-rose-ink: #2c1212;
+  --color-paper: #f4efe4;
+  --color-paper-ink: #1c1914;
+  --color-paper-muted: #5c564c;
+  --color-paper-line: #e4d8c6;
+  --color-stamp: #8d3b34;
   --radius-card: 1.15rem;
 }
 

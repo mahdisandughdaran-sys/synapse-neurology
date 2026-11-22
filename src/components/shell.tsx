@@ -1,10 +1,10 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, Brain, ClipboardCheck, House, Stethoscope } from "lucide-react";
+import { BookOpen, BookOpenText, Brain, ClipboardCheck, House } from "lucide-react";
 import type { ReactNode } from "react";
 
 const links = [
+  { to: "/read", label: "کتاب", icon: BookOpenText, exact: false },
   { to: "/", label: "نقشه", icon: House, exact: true },
-  { to: "/exam", label: "معاینه", icon: Stethoscope, exact: false },
   { to: "/cases", label: "کیس", icon: Brain, exact: false },
   { to: "/quiz", label: "آزمون", icon: ClipboardCheck, exact: false },
   { to: "/review", label: "کارت", icon: BookOpen, exact: false },
@@ -76,8 +76,8 @@ export function Disclaimer() {
   return (
     <p className="mt-8 text-sm leading-relaxed text-muted">
       سیناپس بازنشر کتاب «درسنامه بیماری‌های مغز و اعصاب» (کمیته علمی انجمن مغز و اعصاب ایران، ویراست دوم)
-      نیست. درس‌ها بازنویسی آموزشی مستقل روی همان سرفصل‌های عمومی‌اند؛ نه کلید آزمون، نه پروتکل درمان.
-      دوز دارو را از راهنمای به‌روز مرکز بگیرید. علامت ناگهانی عصبی اورژانس است.
+      نیست. برگ‌ها بازنویسی آموزشی مستقل روی همان سرفصل‌های عمومی‌اند؛ نه کلید آزمون، نه پروتکل درمان.
+      دوز دارو را از راهنمای به‌روز مرکز بگیر. علامت ناگهانی عصبی اورژانس است.
     </p>
   );
 }

@@ -12,10 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ExamRouteImport } from './routes/exam'
 import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as ReadRouteImport } from './routes/read'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as CasesIndexRouteImport } from './routes/cases/index'
 import { Route as CasesIdRouteImport } from './routes/cases/$id'
 import { Route as ChapterIdRouteImport } from './routes/chapter.$id'
+import { Route as ReadIndexRouteImport } from './routes/read.index'
+import { Route as ReadNRouteImport } from './routes/read.$n'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -30,6 +33,11 @@ const ExamRoute = ExamRouteImport.update({
 const QuizRoute = QuizRouteImport.update({
   id: '/quiz',
   path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReadRoute = ReadRouteImport.update({
+  id: '/read',
+  path: '/read',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReviewRoute = ReviewRouteImport.update({
@@ -52,15 +60,28 @@ const ChapterIdRoute = ChapterIdRouteImport.update({
   path: '/chapter/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReadIndexRoute = ReadIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ReadRoute,
+} as any)
+const ReadNRoute = ReadNRouteImport.update({
+  id: '/$n',
+  path: '/$n',
+  getParentRoute: () => ReadRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/exam': typeof ExamRoute
   '/quiz': typeof QuizRoute
+  '/read': typeof ReadRouteWithChildren
   '/review': typeof ReviewRoute
   '/cases/$id': typeof CasesIdRoute
   '/chapter/$id': typeof ChapterIdRoute
+  '/read/$n': typeof ReadNRoute
   '/cases/': typeof CasesIndexRoute
+  '/read/': typeof ReadIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -69,17 +90,22 @@ export interface FileRoutesByTo {
   '/review': typeof ReviewRoute
   '/cases/$id': typeof CasesIdRoute
   '/chapter/$id': typeof ChapterIdRoute
+  '/read/$n': typeof ReadNRoute
   '/cases': typeof CasesIndexRoute
+  '/read': typeof ReadIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/exam': typeof ExamRoute
   '/quiz': typeof QuizRoute
+  '/read': typeof ReadRouteWithChildren
   '/review': typeof ReviewRoute
   '/cases/$id': typeof CasesIdRoute
   '/chapter/$id': typeof ChapterIdRoute
+  '/read/$n': typeof ReadNRoute
   '/cases/': typeof CasesIndexRoute
+  '/read/': typeof ReadIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -87,10 +113,13 @@ export interface FileRouteTypes {
     | '/'
     | '/exam'
     | '/quiz'
+    | '/read'
     | '/review'
     | '/cases/$id'
     | '/chapter/$id'
+    | '/read/$n'
     | '/cases/'
+    | '/read/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -99,22 +128,28 @@ export interface FileRouteTypes {
     | '/review'
     | '/cases/$id'
     | '/chapter/$id'
+    | '/read/$n'
     | '/cases'
+    | '/read'
   id:
     | '__root__'
     | '/'
     | '/exam'
     | '/quiz'
+    | '/read'
     | '/review'
     | '/cases/$id'
     | '/chapter/$id'
+    | '/read/$n'
     | '/cases/'
+    | '/read/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ExamRoute: typeof ExamRoute
   QuizRoute: typeof QuizRoute
+  ReadRoute: typeof ReadRouteWithChildren
   ReviewRoute: typeof ReviewRoute
   CasesIdRoute: typeof CasesIdRoute
   ChapterIdRoute: typeof ChapterIdRoute
@@ -142,6 +177,13 @@ declare module '@tanstack/react-router' {
       path: '/quiz'
       fullPath: '/quiz'
       preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/read': {
+      id: '/read'
+      path: '/read'
+      fullPath: '/read'
+      preLoaderRoute: typeof ReadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/review': {
@@ -172,13 +214,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChapterIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/read/': {
+      id: '/read/'
+      path: '/'
+      fullPath: '/read/'
+      preLoaderRoute: typeof ReadIndexRouteImport
+      parentRoute: typeof ReadRoute
+    }
+    '/read/$n': {
+      id: '/read/$n'
+      path: '/$n'
+      fullPath: '/read/$n'
+      preLoaderRoute: typeof ReadNRouteImport
+      parentRoute: typeof ReadRoute
+    }
   }
 }
+
+interface ReadRouteChildren {
+  ReadNRoute: typeof ReadNRoute
+  ReadIndexRoute: typeof ReadIndexRoute
+}
+
+const ReadRouteChildren: ReadRouteChildren = {
+  ReadNRoute: ReadNRoute,
+  ReadIndexRoute: ReadIndexRoute,
+}
+
+const ReadRouteWithChildren = ReadRoute._addFileChildren(ReadRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ExamRoute: ExamRoute,
   QuizRoute: QuizRoute,
+  ReadRoute: ReadRouteWithChildren,
   ReviewRoute: ReviewRoute,
   CasesIdRoute: CasesIdRoute,
   ChapterIdRoute: ChapterIdRoute,

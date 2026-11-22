@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AlertTriangle, ArrowLeft, ArrowRight, Check, Lightbulb } from "lucide-react";
 import { chapters, getChapter } from "@/data";
+import { pageOfChapter } from "@/data/leaves";
 import { chapterIcons } from "@/components/icons";
 import { Disclaimer, Shell } from "@/components/shell";
 import { FlashDeck, QuizList } from "@/components/study";
@@ -49,6 +50,14 @@ function ChapterPage() {
           </p>
           <h1 className="mt-1 font-display text-4xl leading-none md:text-5xl">{chapter.title}</h1>
           <p className="mt-3 max-w-2xl text-muted">{chapter.blurb}</p>
+          <Link
+            to="/read/$n"
+            params={{ n: String(pageOfChapter(chapter.id)) }}
+            className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-teal px-4 text-sm font-semibold text-teal-ink"
+          >
+            این فصل را برگ‌به‌برگ بخوان
+            <ArrowLeft className="size-4" aria-hidden="true" />
+          </Link>
         </div>
         {Icon ? (
           <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-panel text-teal">

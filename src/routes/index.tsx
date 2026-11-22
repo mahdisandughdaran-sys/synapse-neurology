@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowLeft, Brain, Search } from "lucide-react";
+import { ArrowLeft, BookOpenText, Brain, Search } from "lucide-react";
 import { chapters, cardCount, questionCount } from "@/data";
+import { leaves } from "@/data/leaves";
 import { cases } from "@/data/cases";
 import { chapterIcons } from "@/components/icons";
 import { Disclaimer, Shell } from "@/components/shell";
@@ -33,27 +34,41 @@ function Home() {
       <section className="grid gap-4 rounded-card border border-line bg-panel p-5 md:grid-cols-[1.4fr_0.8fr] md:p-8">
         <div>
           <p className="text-sm font-semibold text-teal">همراه مطالعه · ویراست آموزشی مستقل</p>
-          <h1 className="mt-2 font-display text-5xl leading-none md:text-6xl">بیماری‌های مغز و اعصاب، این بار قابل لمس</h1>
+          <h1 className="mt-2 font-display text-5xl leading-none md:text-6xl">کتاب را برگ‌به‌برگ بخوان</h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-            بیست‌وسه فصل هم‌راستا با سرفصل درسنامه انجمن مغز و اعصاب ایران. هر فصل درس کوتاه، نکته
-            امتحانی، فلش‌کارت و سؤال دارد. کیس‌ها را تشخیص بده و معاینه را ایستگاه‌به‌ایستگاه تمرین کن.
+            {faNum(leaves.length)} برگ آموزشی به ترتیب بیست‌وسه فصل درسنامه انجمن مغز و اعصاب ایران. هر برگ درس
+            کوتاه، حاشیه و یک سؤال دارد. بعدش همان فصل، کیس و آزمون اینجاست؛ متن چاپی کتاب بازنشر نشده.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             <Link
-              to="/chapter/$id"
-              params={{ id: shownNext.id }}
+              to="/read"
               className="inline-flex min-h-11 items-center gap-2 rounded-full bg-teal px-5 font-semibold text-teal-ink"
             >
-              ادامه از {shownNext.title}
-              <ArrowLeft className="size-4" aria-hidden="true" />
+              <BookOpenText className="size-4" aria-hidden="true" />
+              دفتر برگ‌به‌برگ
             </Link>
             <Link
-              to="/quiz"
-              className="inline-flex min-h-11 items-center rounded-full border border-line bg-panel-2 px-5 font-semibold"
+              to="/chapter/$id"
+              params={{ id: shownNext.id }}
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-panel-2 px-5 font-semibold"
             >
-              آزمون ترکیبی
+              ادامه فصل {shownNext.title}
+              <ArrowLeft className="size-4" aria-hidden="true" />
             </Link>
           </div>
+          <p className="mt-4 text-sm text-muted">
+            <Link to="/exam" className="font-semibold text-teal">
+              ایستگاه معاینه
+            </Link>
+            {" "}
+            و
+            {" "}
+            <Link to="/quiz" className="font-semibold text-teal">
+              آزمون ترکیبی
+            </Link>
+            {" "}
+            سر جایشان مانده‌اند.
+          </p>
         </div>
         <dl className="grid grid-cols-2 gap-2">
           <Stat k="فصل" v={faNum(doneCount) + " از " + faNum(chapters.length)} />
