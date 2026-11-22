@@ -1,0 +1,88 @@
+@import "@fontsource/vazirmatn/arabic-400.css";
+@import "@fontsource/vazirmatn/arabic-600.css";
+@import "@fontsource/vazirmatn/arabic-700.css";
+@import "@fontsource/vazirmatn/latin-400.css";
+@import "@fontsource/vazirmatn/latin-600.css";
+@import "@fontsource/vazirmatn/latin-700.css";
+@import "@fontsource/lalezar/arabic-400.css";
+@import "@fontsource/lalezar/latin-400.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Vazirmatn", "DejaVu Sans", sans-serif;
+  --font-display: "Lalezar", "Vazirmatn", sans-serif;
+  --color-ink: #071116;
+  --color-bg: #0b161c;
+  --color-panel: #122028;
+  --color-panel-2: #18303a;
+  --color-line: #2c4652;
+  --color-fg: #e7f2ee;
+  --color-muted: #93ada8;
+  --color-teal: #2fbfa8;
+  --color-teal-ink: #07332e;
+  --color-amber: #e4a24a;
+  --color-amber-ink: #2a1c08;
+  --color-rose: #e07a72;
+  --color-rose-ink: #2c1212;
+  --radius-card: 1.15rem;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html {
+    background: var(--color-bg);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    background-image:
+      linear-gradient(to left, color-mix(in oklab, var(--color-line) 42%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--color-line) 42%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  ::selection {
+    background: var(--color-teal);
+    color: var(--color-teal-ink);
+  }
+}
+
+.flip-scene {
+  perspective: 1000px;
+}
+
+.flip-inner {
+  position: relative;
+  min-height: 13rem;
+  transform-style: preserve-3d;
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.flip-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.flip-back {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-inner {
+    transition: none;
+  }
+}
