@@ -18,6 +18,12 @@ function ReadShelf() {
   const { ready, progress } = useHydratedProgress();
   const bookmark = ready ? Math.min(Math.max(progress.bookmark || 1, 1), leaves.length) : 1;
   const seen = ready ? Object.keys(progress.leafSeen ?? {}).length : 0;
+  const missed = ready
+    ? Object.keys(progress.leafMiss ?? {})
+        .filter((key) => progress.leafMiss?.[key])
+        .map(Number)
+        .sort((a, b) => a - b)
+    : [];
   const here = leaves[bookmark - 1];
 
   const filtered = useMemo(() => {
@@ -33,22 +39,23 @@ function ReadShelf() {
     <Shell>
       <section className="rounded-card border border-line bg-panel p-5 md:p-8">
         <p className="text-sm font-semibold text-teal">دفتر مطالعه · ویراست آموزشی مستقل</p>
-        <h1 className="mt-2 font-display text-5xl leading-none md:text-6xl">برگ‌به‌برگ، نه اسکن کتاب</h1>
+        <h1 className="mt-2 font-display text-5xl leading-none md:text-6xl">صفحه به صفحه، با توقف برای فهمیدن</h1>
         <p className="mt-4 max-w-2xl leading-relaxed text-muted">
-          {faNum(leaves.length)} برگ آموزشی به ترتیب بیست‌وسه فصل درسنامه بیماری‌های مغز و اعصاب (کمیته علمی
-          انجمن، ویراست دوم). هر برگ یک نکته، یک حاشیه و یک سؤال است. جای متن چاپی کتاب را نمی‌گیرد.
+          {faNum(leaves.length)} صفحه به ترتیب بیست‌وسه فصل درسنامه بیماری‌های مغز و اعصاب (کمیته علمی انجمن،
+          ویراست دوم). هر صفحه چند قدم درس است و با یک سؤال بسته می‌شود. جای متن چاپی کتاب را نمی‌گیرد.
         </p>
         <Link
           to="/read/$n"
           params={{ n: String(bookmark) }}
           className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-full bg-teal px-5 font-semibold text-teal-ink"
         >
-          {bookmark <= 1 ? "شروع از برگ اول" : `ادامه از برگ ${faNum(bookmark)}`}
+          {bookmark <= 1 ? "شروع از صفحه اول" : `ادامه از صفحه ${faNum(bookmark)}`}
           {here ? ` · ${here.title}` : ""}
           <ArrowLeft className="size-4" aria-hidden="true" />
         </Link>
         <p className="mt-3 text-sm text-muted">
-          {faNum(seen)} از {faNum(leaves.length)} برگ خوانده شده
+          {faNum(seen)} از {faNum(leaves.length)} صفحه سنجیده شده
+          {missed.length ? ` · ${faNum(missed.length)} صفحه غلط` : ""}
         </p>
         <div className="mt-3 h-2 overflow-hidden rounded-full bg-panel-2">
           <div
@@ -56,6 +63,15 @@ function ReadShelf() {
             style={{ width: `${leaves.length ? Math.round((seen / leaves.length) * 100) : 0}%` }}
           />
         </div>
+        {missed[0] ? (
+          <Link
+            to="/read/$n"
+            params={{ n: String(missed[0]) }}
+            className="mt-4 inline-flex min-h-11 items-center rounded-full bg-rose px-4 text-sm font-semibold text-rose-ink"
+          >
+            مرور صفحه‌های غلط
+          </Link>
+        ) : null}
       </section>
 
       <label className="relative mt-6 block">
@@ -100,6 +116,7 @@ function ReadShelf() {
               <div className="mt-3 flex flex-wrap gap-2">
                 {pages.map((item) => {
                   const read = ready && progress.leafSeen?.[String(item.page)];
+                  const wrong = ready && progress.leafMiss?.[String(item.page)];
                   return (
                     <Link
                       key={item.page}
@@ -107,7 +124,7 @@ function ReadShelf() {
                       params={{ n: String(item.page) }}
                       className={
                         "inline-flex min-h-11 items-center rounded-full border px-3 text-sm " +
-                        (read ? "border-teal text-fg" : "border-line text-muted")
+                        (wrong ? "border-rose text-fg" : read ? "border-teal text-fg" : "border-line text-muted")
                       }
                     >
                       {item.leaf.title}

@@ -34,10 +34,11 @@ function Home() {
       <section className="grid gap-4 rounded-card border border-line bg-panel p-5 md:grid-cols-[1.4fr_0.8fr] md:p-8">
         <div>
           <p className="text-sm font-semibold text-teal">همراه مطالعه · ویراست آموزشی مستقل</p>
-          <h1 className="mt-2 font-display text-5xl leading-none md:text-6xl">کتاب را برگ‌به‌برگ بخوان</h1>
+          <h1 className="mt-2 font-display text-5xl leading-none md:text-6xl">هر صفحه را قدم‌به‌قدم بخوان</h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-            {faNum(leaves.length)} برگ آموزشی به ترتیب بیست‌وسه فصل درسنامه انجمن مغز و اعصاب ایران. هر برگ درس
-            کوتاه، حاشیه و یک سؤال دارد. بعدش همان فصل، کیس و آزمون اینجاست؛ متن چاپی کتاب بازنشر نشده.
+            {faNum(leaves.length)} صفحه آموزشی به ترتیب بیست‌وسه فصل درسنامه انجمن مغز و اعصاب ایران. هر صفحه اول
+            هدف را می‌گوید، بعد درس را باز می‌کند، حاشیه امتحان را می‌گذارد و تا جواب ندهی صفحه بعد روشن نمی‌شود.
+            متن چاپی کتاب بازنشر نشده.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             <Link

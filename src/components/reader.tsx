@@ -6,13 +6,38 @@ import { chapters } from "@/data";
 import { chapterIcons } from "@/components/icons";
 import { faNum } from "@/lib/format";
 import { useHydratedProgress } from "@/lib/use-hydrated";
+import type { Leaf } from "@/data/leaves-types";
+
+function lessonBeats(leaf: Leaf) {
+  const parts = leaf.body.split(/(?<=[.؟!])\s+/).filter(Boolean);
+  const lesson =
+    parts.length < 3
+      ? [leaf.body]
+      : [
+          parts.slice(0, Math.ceil(parts.length / 2)).join(" "),
+          parts.slice(Math.ceil(parts.length / 2)).join(" "),
+        ];
+  return [
+    { k: "هدف این صفحه", text: leaf.lead },
+    ...lesson.map((text, index) => ({
+      k: lesson.length > 1 ? `درس ${faNum(index + 1)}` : "درس",
+      text,
+    })),
+    { k: "حاشیه امتحان", text: leaf.note },
+  ];
+}
 
 export function BookReader({ page }: { page: number }) {
   const leaf = leaves[page - 1];
   const navigate = useNavigate();
   const { ready, progress } = useHydratedProgress();
   const [openToc, setOpenToc] = useState(false);
+  const [beat, setBeat] = useState(0);
+  const [pick, setPick] = useState<number | null>(null);
   const setBookmark = progress.setBookmark;
+  const beats = leaf ? lessonBeats(leaf) : [];
+  const taught = beat >= beats.length - 1;
+  const answered = pick !== null;
 
   useEffect(() => {
     if (!ready || !leaf) return;
@@ -20,11 +45,25 @@ export function BookReader({ page }: { page: number }) {
   }, [ready, page, leaf, setBookmark]);
 
   useEffect(() => {
+    setBeat(0);
+    setPick(null);
+    setOpenToc(false);
+  }, [page]);
+
+  function go(next: number) {
+    if (next < 1 || next > leaves.length) return;
+    void navigate({ to: "/read/$n", params: { n: String(next) } });
+  }
+
+  useEffect(() => {
     function onKey(event: KeyboardEvent) {
       const tag = (event.target as HTMLElement | null)?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA") return;
-      if (event.key === "ArrowLeft" && page < leaves.length) {
-        void navigate({ to: "/read/$n", params: { n: String(page + 1) } });
+      if (event.key === "ArrowLeft") {
+        if (beat < beats.length - 1) setBeat((value) => value + 1);
+        else if (pick !== null && page < leaves.length) {
+          void navigate({ to: "/read/$n", params: { n: String(page + 1) } });
+        }
       }
       if (event.key === "ArrowRight" && page > 1) {
         void navigate({ to: "/read/$n", params: { n: String(page - 1) } });
@@ -32,7 +71,7 @@ export function BookReader({ page }: { page: number }) {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [page, navigate]);
+  }, [beat, beats.length, navigate, page, pick]);
 
   if (!leaf) {
     return (
@@ -49,15 +88,17 @@ export function BookReader({ page }: { page: number }) {
   const inChapter = chapter ? pagesOf(chapter.id) : [];
   const localIndex = inChapter.findIndex((item) => item.page === page);
   const seen = ready ? Object.keys(progress.leafSeen ?? {}).length : 0;
+  const missed = ready && progress.leafMiss?.[String(page)];
   const Icon = chapter ? chapterIcons[chapter.id] : undefined;
+  const lastOfChapter = localIndex === inChapter.length - 1;
 
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted">
-          برگ {faNum(page)} از {faNum(leaves.length)}
+          صفحه {faNum(page)} از {faNum(leaves.length)}
           {chapter ? ` · فصل ${faNum(chapter.n)}` : ""}
-          {ready ? ` · ${faNum(seen)} برگ خوانده‌شده` : ""}
+          {ready ? ` · ${faNum(seen)} سنجیده شده` : ""}
         </p>
         <button
           type="button"
@@ -65,7 +106,7 @@ export function BookReader({ page }: { page: number }) {
           className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-panel px-4 text-sm font-semibold"
         >
           <Bookmark className="size-4 text-amber" aria-hidden="true" />
-          فهرست برگ‌ها
+          فهرست همین کتاب
         </button>
       </div>
 
@@ -80,19 +121,21 @@ export function BookReader({ page }: { page: number }) {
                 {pagesOf(item.id).map((itemPage) => {
                   const active = itemPage.page === page;
                   const read = ready && progress.leafSeen?.[String(itemPage.page)];
+                  const wrong = ready && progress.leafMiss?.[String(itemPage.page)];
                   return (
                     <Link
                       key={itemPage.page}
                       to="/read/$n"
                       params={{ n: String(itemPage.page) }}
-                      onClick={() => setOpenToc(false)}
                       className={
                         "inline-flex min-h-11 items-center rounded-full border px-3 text-sm " +
                         (active
                           ? "border-teal bg-teal text-teal-ink"
-                          : read
-                            ? "border-line bg-panel-2 text-fg"
-                            : "border-line text-muted")
+                          : wrong
+                            ? "border-rose text-fg"
+                            : read
+                              ? "border-line bg-panel-2 text-fg"
+                              : "border-line text-muted")
                       }
                     >
                       {faNum(itemPage.page)} {itemPage.leaf.title}
@@ -105,81 +148,155 @@ export function BookReader({ page }: { page: number }) {
         </div>
       ) : null}
 
-      <article className="relative overflow-hidden rounded-card border border-paper-line bg-paper text-paper-ink shadow-none">
+      <article className="relative overflow-hidden rounded-card border border-paper-line bg-paper text-paper-ink">
         <div className="absolute inset-y-0 right-0 w-2 bg-teal" aria-hidden="true" />
         <div className="px-5 py-6 sm:px-8 sm:py-8">
-          <header className="flex items-start justify-between gap-4 border-b border-paper-line pb-4">
-            <div>
-              <p className="text-sm font-semibold text-stamp">
-                {chapter ? `${chapter.title} · برگ ${faNum(localIndex + 1)} از ${faNum(inChapter.length)}` : "سیناپس"}
-              </p>
-              <h1 className="mt-2 font-display text-4xl leading-none sm:text-5xl">{leaf.title}</h1>
+          <header className="border-b border-paper-line pb-4">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold text-stamp">
+                  {chapter
+                    ? `${chapter.title} · صفحه ${faNum(localIndex + 1)} از ${faNum(inChapter.length)} این فصل`
+                    : "سیناپس"}
+                </p>
+                <h1 className="mt-2 font-display text-4xl leading-none sm:text-5xl">{leaf.title}</h1>
+              </div>
+              {Icon ? (
+                <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-paper-line text-stamp">
+                  <Icon className="size-6" aria-hidden="true" />
+                </span>
+              ) : null}
             </div>
-            {Icon ? (
-              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-paper-line text-stamp">
-                <Icon className="size-6" aria-hidden="true" />
-              </span>
-            ) : null}
+            <ol className="mt-4 flex flex-wrap gap-2" aria-label="قدم‌های این صفحه">
+              {beats.map((item, index) => {
+                const on = index <= beat;
+                return (
+                  <li
+                    key={item.k}
+                    className={
+                      "rounded-full px-3 py-1 text-xs font-semibold " +
+                      (on ? "bg-teal text-teal-ink" : "bg-paper-line text-paper-muted")
+                    }
+                  >
+                    {faNum(index + 1)} {item.k}
+                  </li>
+                );
+              })}
+              <li
+                className={
+                  "rounded-full px-3 py-1 text-xs font-semibold " +
+                  (taught ? "bg-amber text-amber-ink" : "bg-paper-line text-paper-muted")
+                }
+              >
+                {faNum(beats.length + 1)} بسنج
+              </li>
+            </ol>
+            {missed ? <p className="mt-3 text-sm font-semibold text-stamp">این صفحه را دفعه قبل غلط زدی. یک بار دیگر.</p> : null}
           </header>
 
-          <p className="mt-5 text-lg leading-relaxed font-semibold">{leaf.lead}</p>
-          <p className="mt-3 leading-relaxed text-paper-muted">{leaf.body}</p>
+          <div className="mt-5 space-y-4">
+            {beats.slice(0, beat + 1).map((item) => (
+              <section key={item.k}>
+                <h2 className="text-xs font-semibold text-stamp">{item.k}</h2>
+                <p className={"mt-1 leading-relaxed " + (item.k === "هدف این صفحه" ? "text-lg font-semibold" : "text-paper-muted")}>
+                  {item.text}
+                </p>
+              </section>
+            ))}
+          </div>
 
-          <aside className="mt-5 rounded-2xl border border-paper-line bg-paper-line px-4 py-3">
-            <p className="text-xs font-semibold text-stamp">حاشیه برگ</p>
-            <p className="mt-1 leading-relaxed">{leaf.note}</p>
-          </aside>
+          {!taught ? (
+            <button
+              type="button"
+              className="mt-6 inline-flex min-h-12 items-center rounded-full bg-teal px-5 font-semibold text-teal-ink"
+              onClick={() => setBeat((value) => Math.min(beats.length - 1, value + 1))}
+            >
+              قدم بعد درس
+            </button>
+          ) : (
+            <LeafCheck
+              page={page}
+              pick={pick}
+              onPick={(index) => {
+                setPick(index);
+                progress.markLeafResult(String(page), index === leaf.answer);
+              }}
+            />
+          )}
 
-          <LeafCheck key={page} page={page} />
+          {answered && lastOfChapter && chapter ? (
+            <p className="mt-5 rounded-2xl border border-paper-line bg-paper-line px-4 py-3 text-sm leading-relaxed">
+              فصل «{chapter.title}» در دفتر تمام شد. اگر خواستی همین‌جا جمع‌بندی و کارت‌های فصل را باز کن.{" "}
+              <Link to="/chapter/$id" params={{ id: chapter.id }} className="font-semibold text-stamp">
+                برو به فصل
+              </Link>
+            </p>
+          ) : null}
         </div>
       </article>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
         {page > 1 ? (
-          <Link
-            to="/read/$n"
-            params={{ n: String(page - 1) }}
+          <button
+            type="button"
+            onClick={() => go(page - 1)}
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-line bg-panel font-semibold"
           >
             <ArrowRight className="size-4" aria-hidden="true" />
-            برگ قبل
-          </Link>
+            صفحه قبل
+          </button>
         ) : (
           <span />
         )}
         {page < leaves.length ? (
-          <Link
-            to="/read/$n"
-            params={{ n: String(page + 1) }}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-teal font-semibold text-teal-ink"
+          <button
+            type="button"
+            disabled={!answered}
+            onClick={() => go(page + 1)}
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-teal font-semibold text-teal-ink disabled:opacity-40"
           >
-            برگ بعد
+            صفحه بعد
             <ArrowLeft className="size-4" aria-hidden="true" />
-          </Link>
+          </button>
         ) : (
           <Link
             to="/quiz"
-            className="inline-flex min-h-12 items-center justify-center rounded-full bg-amber font-semibold text-amber-ink"
+            className={
+              "inline-flex min-h-12 items-center justify-center rounded-full bg-amber font-semibold text-amber-ink " +
+              (answered ? "" : "pointer-events-none opacity-40")
+            }
           >
             دفتر تمام شد · آزمون
           </Link>
         )}
       </div>
-      <p className="mt-3 text-sm text-muted">با فلش چپ برگ بعد و با فلش راست برگ قبل را باز کن.</p>
+      {page < leaves.length && !answered ? (
+        <button type="button" onClick={() => go(page + 1)} className="mt-3 text-sm text-muted">
+          بدون سنجیدن رد شو
+        </button>
+      ) : (
+        <p className="mt-3 text-sm text-muted">فلش چپ قدم بعد یا صفحه بعد است. فلش راست برمی‌گردد.</p>
+      )}
     </div>
   );
 }
 
-function LeafCheck({ page }: { page: number }) {
+function LeafCheck({
+  page,
+  pick,
+  onPick,
+}: {
+  page: number;
+  pick: number | null;
+  onPick: (index: number) => void;
+}) {
   const leaf = leaves[page - 1];
-  const { progress } = useHydratedProgress();
-  const [pick, setPick] = useState<number | null>(null);
   if (!leaf) return null;
   const open = pick !== null;
 
   return (
     <section className="mt-6 border-t border-paper-line pt-5">
-      <h2 className="text-base font-semibold">خودت را همین‌جا بسنج</h2>
+      <h2 className="text-base font-semibold">خودت را همین صفحه بسنج</h2>
       <p className="mt-2 leading-relaxed">{leaf.q}</p>
       <div className="mt-3 grid gap-2">
         {leaf.options.map((option, index) => {
@@ -193,15 +310,12 @@ function LeafCheck({ page }: { page: number }) {
               key={option}
               type="button"
               disabled={open}
-              onClick={() => {
-                setPick(index);
-                progress.markLeaf(String(page));
-              }}
+              onClick={() => onPick(index)}
               className={"min-h-12 rounded-2xl border px-4 text-right leading-relaxed " + tone}
             >
               <span className="flex items-center justify-between gap-3">
                 <span>{option}</span>
-                {open && correct ? <Check className="size-4 shrink-0 text-teal-ink" aria-hidden="true" /> : null}
+                {open && correct ? <Check className="size-4 shrink-0" aria-hidden="true" /> : null}
                 {open && chosen && !correct ? <X className="size-4 shrink-0 text-stamp" aria-hidden="true" /> : null}
               </span>
             </button>

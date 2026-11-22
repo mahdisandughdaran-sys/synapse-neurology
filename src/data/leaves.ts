@@ -3,11 +3,17 @@ import { leaves1 } from "./leaves-1";
 import { leaves2 } from "./leaves-2";
 import { leaves3 } from "./leaves-3";
 import { leaves4 } from "./leaves-4";
+import { leavesGap } from "./leaves-gap";
 import type { Leaf } from "./leaves-types";
 
 export type { Leaf };
 
-export const leaves: Leaf[] = [...leaves1, ...leaves2, ...leaves3, ...leaves4];
+const raw: Leaf[] = [...leaves1, ...leaves2, ...leaves3, ...leaves4, ...leavesGap];
+
+/** برگ‌ها به ترتیب فصل‌های درسنامه، نه به ترتیب فایل. */
+export const leaves: Leaf[] = chapters.flatMap((chapter) =>
+  raw.filter((leaf) => leaf.chapterId === chapter.id),
+);
 
 export function pageOfChapter(chapterId: string) {
   const index = leaves.findIndex((leaf) => leaf.chapterId === chapterId);
