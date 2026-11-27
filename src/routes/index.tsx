@@ -23,7 +23,8 @@ function Home() {
     const s = q.trim();
     if (!s) return chapters;
     return chapters.filter(
-      (c) => c.title.includes(s) || c.en.toLowerCase().includes(s.toLowerCase()) || c.blurb.includes(s),
+      (c) =>
+        c.title.includes(s) || c.en.toLowerCase().includes(s.toLowerCase()) || c.blurb.includes(s),
     );
   }, [q]);
 
@@ -34,11 +35,13 @@ function Home() {
       <section className="grid gap-4 rounded-card border border-line bg-panel p-5 md:grid-cols-[1.4fr_0.8fr] md:p-8">
         <div>
           <p className="text-sm font-semibold text-teal">همراه مطالعه · ویراست آموزشی مستقل</p>
-          <h1 className="mt-2 font-display text-5xl leading-none md:text-6xl">هر صفحه را قدم‌به‌قدم بخوان</h1>
+          <h1 className="mt-2 font-display text-5xl leading-none md:text-6xl">
+            هر صفحه را قدم‌به‌قدم بخوان
+          </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-            {faNum(leaves.length)} صفحه آموزشی به ترتیب بیست‌وسه فصل درسنامه انجمن مغز و اعصاب ایران. هر صفحه اول
-            هدف را می‌گوید، بعد درس را باز می‌کند، حاشیه امتحان را می‌گذارد و تا جواب ندهی صفحه بعد روشن نمی‌شود.
-            متن چاپی کتاب بازنشر نشده.
+            {faNum(leaves.length)} صفحه آموزشی به ترتیب بیست‌وسه فصل درسنامه انجمن مغز و اعصاب
+            ایران. هر صفحه اول هدف را می‌گوید، بعد درس را باز می‌کند، حاشیه امتحان را می‌گذارد و تا
+            جواب ندهی صفحه بعد روشن نمی‌شود. متن چاپی کتاب بازنشر نشده.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             <Link
@@ -60,15 +63,16 @@ function Home() {
           <p className="mt-4 text-sm text-muted">
             <Link to="/exam" className="font-semibold text-teal">
               ایستگاه معاینه
-            </Link>
-            {" "}
-            و
-            {" "}
+            </Link>{" "}
+            و{" "}
             <Link to="/quiz" className="font-semibold text-teal">
               آزمون ترکیبی
-            </Link>
-            {" "}
-            سر جایشان مانده‌اند.
+            </Link>{" "}
+            سر جایشان مانده‌اند. مسیر جداگانه{" "}
+            <Link to="/aminoff" className="font-semibold text-amber">
+              صد صفحهٔ اول روش بالینی
+            </Link>{" "}
+            هم کنار این بیست‌وسه فصل است، نه به‌جایش.
           </p>
         </div>
         <dl className="grid grid-cols-2 gap-2">
@@ -124,7 +128,9 @@ function Home() {
         })}
       </div>
       {filtered.length === 0 ? (
-        <p className="mt-6 rounded-card border border-line bg-panel p-4 text-muted">فصلی با این عبارت پیدا نشد.</p>
+        <p className="mt-6 rounded-card border border-line bg-panel p-4 text-muted">
+          فصلی با این عبارت پیدا نشد.
+        </p>
       ) : null}
       <Disclaimer />
     </Shell>

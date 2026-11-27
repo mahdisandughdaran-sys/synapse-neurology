@@ -8,240 +8,280 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ExamRouteImport } from './routes/exam'
-import { Route as QuizRouteImport } from './routes/quiz'
-import { Route as ReadRouteImport } from './routes/read'
-import { Route as ReviewRouteImport } from './routes/review'
-import { Route as CasesIndexRouteImport } from './routes/cases/index'
-import { Route as CasesIdRouteImport } from './routes/cases/$id'
-import { Route as ChapterIdRouteImport } from './routes/chapter.$id'
-import { Route as ReadIndexRouteImport } from './routes/read.index'
-import { Route as ReadNRouteImport } from './routes/read.$n'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as ExamRouteImport } from "./routes/exam";
+import { Route as QuizRouteImport } from "./routes/quiz";
+import { Route as ReadRouteImport } from "./routes/read";
+import { Route as ReviewRouteImport } from "./routes/review";
+import { Route as CasesIndexRouteImport } from "./routes/cases/index";
+import { Route as CasesIdRouteImport } from "./routes/cases/$id";
+import { Route as ChapterIdRouteImport } from "./routes/chapter.$id";
+import { Route as AminoffIdRouteImport } from "./routes/aminoff/$id";
+import { Route as AminoffIndexRouteImport } from "./routes/aminoff/index";
+import { Route as ReadIndexRouteImport } from "./routes/read.index";
+import { Route as ReadNRouteImport } from "./routes/read.$n";
 
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ExamRoute = ExamRouteImport.update({
-  id: '/exam',
-  path: '/exam',
+  id: "/exam",
+  path: "/exam",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const QuizRoute = QuizRouteImport.update({
-  id: '/quiz',
-  path: '/quiz',
+  id: "/quiz",
+  path: "/quiz",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ReadRoute = ReadRouteImport.update({
-  id: '/read',
-  path: '/read',
+  id: "/read",
+  path: "/read",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ReviewRoute = ReviewRouteImport.update({
-  id: '/review',
-  path: '/review',
+  id: "/review",
+  path: "/review",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const CasesIndexRoute = CasesIndexRouteImport.update({
-  id: '/cases/',
-  path: '/cases/',
+  id: "/cases/",
+  path: "/cases/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const CasesIdRoute = CasesIdRouteImport.update({
-  id: '/cases/$id',
-  path: '/cases/$id',
+  id: "/cases/$id",
+  path: "/cases/$id",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
+const AminoffIdRoute = AminoffIdRouteImport.update({
+  id: "/aminoff/$id",
+  path: "/aminoff/$id",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const AminoffIndexRoute = AminoffIndexRouteImport.update({
+  id: "/aminoff/",
+  path: "/aminoff/",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const ChapterIdRoute = ChapterIdRouteImport.update({
-  id: '/chapter/$id',
-  path: '/chapter/$id',
+  id: "/chapter/$id",
+  path: "/chapter/$id",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ReadIndexRoute = ReadIndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => ReadRoute,
-} as any)
+} as any);
 const ReadNRoute = ReadNRouteImport.update({
-  id: '/$n',
-  path: '/$n',
+  id: "/$n",
+  path: "/$n",
   getParentRoute: () => ReadRoute,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/exam': typeof ExamRoute
-  '/quiz': typeof QuizRoute
-  '/read': typeof ReadRouteWithChildren
-  '/review': typeof ReviewRoute
-  '/cases/$id': typeof CasesIdRoute
-  '/chapter/$id': typeof ChapterIdRoute
-  '/read/$n': typeof ReadNRoute
-  '/cases/': typeof CasesIndexRoute
-  '/read/': typeof ReadIndexRoute
+  "/": typeof IndexRoute;
+  "/exam": typeof ExamRoute;
+  "/quiz": typeof QuizRoute;
+  "/read": typeof ReadRouteWithChildren;
+  "/review": typeof ReviewRoute;
+  "/cases/$id": typeof CasesIdRoute;
+  "/aminoff/$id": typeof AminoffIdRoute;
+  "/chapter/$id": typeof ChapterIdRoute;
+  "/read/$n": typeof ReadNRoute;
+  "/cases/": typeof CasesIndexRoute;
+  "/aminoff/": typeof AminoffIndexRoute;
+  "/read/": typeof ReadIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/exam': typeof ExamRoute
-  '/quiz': typeof QuizRoute
-  '/review': typeof ReviewRoute
-  '/cases/$id': typeof CasesIdRoute
-  '/chapter/$id': typeof ChapterIdRoute
-  '/read/$n': typeof ReadNRoute
-  '/cases': typeof CasesIndexRoute
-  '/read': typeof ReadIndexRoute
+  "/": typeof IndexRoute;
+  "/exam": typeof ExamRoute;
+  "/quiz": typeof QuizRoute;
+  "/review": typeof ReviewRoute;
+  "/cases/$id": typeof CasesIdRoute;
+  "/aminoff/$id": typeof AminoffIdRoute;
+  "/chapter/$id": typeof ChapterIdRoute;
+  "/read/$n": typeof ReadNRoute;
+  "/cases": typeof CasesIndexRoute;
+  "/aminoff": typeof AminoffIndexRoute;
+  "/read": typeof ReadIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/exam': typeof ExamRoute
-  '/quiz': typeof QuizRoute
-  '/read': typeof ReadRouteWithChildren
-  '/review': typeof ReviewRoute
-  '/cases/$id': typeof CasesIdRoute
-  '/chapter/$id': typeof ChapterIdRoute
-  '/read/$n': typeof ReadNRoute
-  '/cases/': typeof CasesIndexRoute
-  '/read/': typeof ReadIndexRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/exam": typeof ExamRoute;
+  "/quiz": typeof QuizRoute;
+  "/read": typeof ReadRouteWithChildren;
+  "/review": typeof ReviewRoute;
+  "/cases/$id": typeof CasesIdRoute;
+  "/aminoff/$id": typeof AminoffIdRoute;
+  "/chapter/$id": typeof ChapterIdRoute;
+  "/read/$n": typeof ReadNRoute;
+  "/cases/": typeof CasesIndexRoute;
+  "/aminoff/": typeof AminoffIndexRoute;
+  "/read/": typeof ReadIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/exam'
-    | '/quiz'
-    | '/read'
-    | '/review'
-    | '/cases/$id'
-    | '/chapter/$id'
-    | '/read/$n'
-    | '/cases/'
-    | '/read/'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/exam"
+    | "/quiz"
+    | "/read"
+    | "/review"
+    | "/cases/$id"
+    | "/aminoff/$id"
+    | "/chapter/$id"
+    | "/read/$n"
+    | "/cases/"
+    | "/aminoff/"
+    | "/read/";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/exam'
-    | '/quiz'
-    | '/review'
-    | '/cases/$id'
-    | '/chapter/$id'
-    | '/read/$n'
-    | '/cases'
-    | '/read'
+    | "/"
+    | "/exam"
+    | "/quiz"
+    | "/review"
+    | "/cases/$id"
+    | "/aminoff/$id"
+    | "/chapter/$id"
+    | "/read/$n"
+    | "/cases"
+    | "/aminoff"
+    | "/read";
   id:
-    | '__root__'
-    | '/'
-    | '/exam'
-    | '/quiz'
-    | '/read'
-    | '/review'
-    | '/cases/$id'
-    | '/chapter/$id'
-    | '/read/$n'
-    | '/cases/'
-    | '/read/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/exam"
+    | "/quiz"
+    | "/read"
+    | "/review"
+    | "/cases/$id"
+    | "/aminoff/$id"
+    | "/chapter/$id"
+    | "/read/$n"
+    | "/cases/"
+    | "/aminoff/"
+    | "/read/";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ExamRoute: typeof ExamRoute
-  QuizRoute: typeof QuizRoute
-  ReadRoute: typeof ReadRouteWithChildren
-  ReviewRoute: typeof ReviewRoute
-  CasesIdRoute: typeof CasesIdRoute
-  ChapterIdRoute: typeof ChapterIdRoute
-  CasesIndexRoute: typeof CasesIndexRoute
+  IndexRoute: typeof IndexRoute;
+  ExamRoute: typeof ExamRoute;
+  QuizRoute: typeof QuizRoute;
+  ReadRoute: typeof ReadRouteWithChildren;
+  ReviewRoute: typeof ReviewRoute;
+  CasesIdRoute: typeof CasesIdRoute;
+  AminoffIdRoute: typeof AminoffIdRoute;
+  AminoffIndexRoute: typeof AminoffIndexRoute;
+  ChapterIdRoute: typeof ChapterIdRoute;
+  CasesIndexRoute: typeof CasesIndexRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/exam': {
-      id: '/exam'
-      path: '/exam'
-      fullPath: '/exam'
-      preLoaderRoute: typeof ExamRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz': {
-      id: '/quiz'
-      path: '/quiz'
-      fullPath: '/quiz'
-      preLoaderRoute: typeof QuizRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/read': {
-      id: '/read'
-      path: '/read'
-      fullPath: '/read'
-      preLoaderRoute: typeof ReadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/review': {
-      id: '/review'
-      path: '/review'
-      fullPath: '/review'
-      preLoaderRoute: typeof ReviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cases/': {
-      id: '/cases/'
-      path: '/cases'
-      fullPath: '/cases/'
-      preLoaderRoute: typeof CasesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cases/$id': {
-      id: '/cases/$id'
-      path: '/cases/$id'
-      fullPath: '/cases/$id'
-      preLoaderRoute: typeof CasesIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/chapter/$id': {
-      id: '/chapter/$id'
-      path: '/chapter/$id'
-      fullPath: '/chapter/$id'
-      preLoaderRoute: typeof ChapterIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/read/': {
-      id: '/read/'
-      path: '/'
-      fullPath: '/read/'
-      preLoaderRoute: typeof ReadIndexRouteImport
-      parentRoute: typeof ReadRoute
-    }
-    '/read/$n': {
-      id: '/read/$n'
-      path: '/$n'
-      fullPath: '/read/$n'
-      preLoaderRoute: typeof ReadNRouteImport
-      parentRoute: typeof ReadRoute
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/exam": {
+      id: "/exam";
+      path: "/exam";
+      fullPath: "/exam";
+      preLoaderRoute: typeof ExamRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/quiz": {
+      id: "/quiz";
+      path: "/quiz";
+      fullPath: "/quiz";
+      preLoaderRoute: typeof QuizRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/read": {
+      id: "/read";
+      path: "/read";
+      fullPath: "/read";
+      preLoaderRoute: typeof ReadRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/review": {
+      id: "/review";
+      path: "/review";
+      fullPath: "/review";
+      preLoaderRoute: typeof ReviewRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/cases/": {
+      id: "/cases/";
+      path: "/cases";
+      fullPath: "/cases/";
+      preLoaderRoute: typeof CasesIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/cases/$id": {
+      id: "/cases/$id";
+      path: "/cases/$id";
+      fullPath: "/cases/$id";
+      preLoaderRoute: typeof CasesIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/aminoff/": {
+      id: "/aminoff/";
+      path: "/aminoff";
+      fullPath: "/aminoff/";
+      preLoaderRoute: typeof AminoffIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/aminoff/$id": {
+      id: "/aminoff/$id";
+      path: "/aminoff/$id";
+      fullPath: "/aminoff/$id";
+      preLoaderRoute: typeof AminoffIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/chapter/$id": {
+      id: "/chapter/$id";
+      path: "/chapter/$id";
+      fullPath: "/chapter/$id";
+      preLoaderRoute: typeof ChapterIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/read/": {
+      id: "/read/";
+      path: "/";
+      fullPath: "/read/";
+      preLoaderRoute: typeof ReadIndexRouteImport;
+      parentRoute: typeof ReadRoute;
+    };
+    "/read/$n": {
+      id: "/read/$n";
+      path: "/$n";
+      fullPath: "/read/$n";
+      preLoaderRoute: typeof ReadNRouteImport;
+      parentRoute: typeof ReadRoute;
+    };
   }
 }
 
 interface ReadRouteChildren {
-  ReadNRoute: typeof ReadNRoute
-  ReadIndexRoute: typeof ReadIndexRoute
+  ReadNRoute: typeof ReadNRoute;
+  ReadIndexRoute: typeof ReadIndexRoute;
 }
 
 const ReadRouteChildren: ReadRouteChildren = {
   ReadNRoute: ReadNRoute,
   ReadIndexRoute: ReadIndexRoute,
-}
+};
 
-const ReadRouteWithChildren = ReadRoute._addFileChildren(ReadRouteChildren)
+const ReadRouteWithChildren = ReadRoute._addFileChildren(ReadRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -250,18 +290,20 @@ const rootRouteChildren: RootRouteChildren = {
   ReadRoute: ReadRouteWithChildren,
   ReviewRoute: ReviewRoute,
   CasesIdRoute: CasesIdRoute,
+  AminoffIdRoute: AminoffIdRoute,
+  AminoffIndexRoute: AminoffIndexRoute,
   ChapterIdRoute: ChapterIdRoute,
   CasesIndexRoute: CasesIndexRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
+import type { getRouter } from "./router.tsx";
+import type { createStart } from "@tanstack/react-start";
+declare module "@tanstack/react-start" {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
   }
 }
